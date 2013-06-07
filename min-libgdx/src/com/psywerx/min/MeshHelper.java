@@ -1,5 +1,6 @@
 package com.psywerx.min;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,12 +18,11 @@ public class MeshHelper {
   
   public void createMesh(float[] vertices){
     mesh = new Mesh(true, vertices.length, 0, 
-        new VertexAttribute(Usage.Position, 3, "a_position"), 
-        new VertexAttribute(Usage.Normal, 3, "a_normal"),
-        new VertexAttribute(Usage.ColorPacked, 4, "a_color"));
+        new VertexAttribute(Usage.Position, 3, "a_position"),
+        new VertexAttribute(Usage.Color, 4, "a_color"),
+        new VertexAttribute(Usage.Normal, 3, "a_normal"));
     
     mesh.setVertices(vertices);
-    
 
   }
   
@@ -32,7 +32,7 @@ public class MeshHelper {
     }
     meshShader.begin();
     meshShader.setUniformMatrix("u_worldView", camera.combined);
-    meshShader.setUniform3fv("u_lightPos", new float[] {0,0,0}, 0, 3);
+    meshShader.setUniform3fv("u_lightPos", new float[]{0.2f, 0.2f, 1.2f}, 0, 3);
     mesh.render(meshShader, GL20.GL_TRIANGLES);
     meshShader.end();
   }
@@ -41,23 +41,22 @@ public class MeshHelper {
     // this shader tells opengl where to put things
     String vertexShader = "uniform mat4 u_worldView;     \n"
                         + "uniform vec3 u_lightPos;      \n"
-
+        
                         + "attribute vec4 a_position;    \n"
-                        + "attribute vec3 a_normal;      \n"
                         + "attribute vec4 a_color;       \n"
-                        
+                        + "attribute vec3 a_normal;      \n"
+        
                         + "varying vec4 v_color;         \n"
                         
                         + "void main()                   \n"
                         + "{                             \n"
-                        + "   vec3 modelViewVertex = vec3(u_worldView * vec4(a_position, 0.0));          \n"
-                        + "   vec3 lightVector = normalize(u_lightPos - modelViewVertex);     \n"
-                        + "   vec3 modelViewNormal = vec3(u_worldView * vec4(a_normal, 0.0)); \n"
-                        + "   float diffuse = max(dot(modelViewNormal, lightVector), 0.1);    \n"
-                        + "   v_color = a_color * diffuse;                                    \n"
-                        + "   gl_Position = modelViewVertex;                                  \n"
+                        + "   vec3 modelViewVertex = vec3(u_worldView * a_position); \n"
+                        + "   vec3 modelViewNormal = vec3(u_worldView * vec4(a_normal, 0.0));"
+                        + "   vec3 lightVector = normalize(u_lightPos - modelViewVertex);"
+                        + "   float diffuse = max(dot(modelViewNormal, lightVector), 0.1);"
+                        + "   v_color = a_color * diffuse;         \n"
+                        + "   gl_Position = u_worldView * a_position;  \n"
                         + "}                             \n";
-
     // this one tells it what goes in between the points (i.e
     // colour/texture)
     String fragmentShader = "#ifdef GL_ES                \n"
@@ -66,7 +65,7 @@ public class MeshHelper {
                           + "varying vec4 v_color;       \n"
                           + "void main()                 \n"
                           + "{                           \n"
-                          + "  gl_FragColor = v_color;   \n"
+                          + "  gl_FragColor = v_color;    \n"
                           + "}";
 
     // make an actual shader from our strings

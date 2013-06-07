@@ -19,9 +19,9 @@ public class MinGame implements ApplicationListener {
 		
 		meshHelper = new MeshHelper();
     meshHelper.createMesh(new float[] { 
-        -0.5f, -0.5f, 0,  1, 0, 0,  1f, 0, 0, 0,
-         0.5f, -0.5f, 0,  1, 0, 0,  1f, 0, 0, 0,  
-           0f,  0.5f, 0,  1, 0, 0,  1f, 0, 0, 0});
+        -0.5f, -0.5f, 0,  1f, 0, 0, 1.0f,  1f, 0, 0,
+         0.5f, -0.5f, 0,  1f, 1f, 0, 1.0f,  1f, 0, 0,
+           0f,  0.5f, 0,  1f, 0, 0, 1.0f,  1f, 0 ,0,});
 	}
 	
 	@Override

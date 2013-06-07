@@ -59,10 +59,10 @@ public class MeshHelper {
   
   
   
-  public void createMesh(float[] vertices, short[] indices){
+  public void createMesh(){
     
     mesh = genCube();
-    mesh.scale(0.2f, 0.2f, 0.2f);
+    mesh.scale(50f, 50f, 50f);
     modelView = new Matrix4().idt();
   }
   
@@ -77,7 +77,7 @@ public class MeshHelper {
     meshShader.begin();
     meshShader.setUniformMatrix("u_worldView", camera.combined);
     meshShader.setUniformMatrix("u_modelView", modelView);
-    meshShader.setUniform3fv("u_lightPos", new float[]{0,0,-2f}, 0, 3);
+    meshShader.setUniform3fv("u_lightPos", new float[]{0,0,-200f}, 0, 3);
     mesh.render(meshShader, GL20.GL_TRIANGLES);
     meshShader.end();
   }

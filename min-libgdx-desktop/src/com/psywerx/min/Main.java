@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "min-libgdx";
 		cfg.useGL20 = true;
-		cfg.width = 1200;
-		cfg.height = 780;
+		cfg.width = 1280;
+		cfg.height = 800;
 		
 		new LwjglApplication(new MinGame(), cfg);
 	}

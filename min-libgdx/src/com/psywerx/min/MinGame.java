@@ -4,41 +4,22 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 
 public class MinGame implements ApplicationListener {
 	private OrthographicCamera camera;
-	private PerspectiveCamera perCamera;
   private MeshHelper meshHelper;
 	
 	@Override
 	public void create() {		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		int w = Gdx.graphics.getWidth();
+		int h = Gdx.graphics.getHeight();
 		
-		camera = new OrthographicCamera(1, h/w);
-		perCamera = new PerspectiveCamera();
-		
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		meshHelper = new MeshHelper();
-    meshHelper.createMesh(new float[] { 
-         0, -0.5f, -4,    1f, 0, 0, 1.0f,  0f, 0, 1,
-         1, -0.5f, -4,  1f, 1f, 0, 1.0f,  0f, 0, 1,
-         1, 0.5f, -4,   1f, 0, 0, 1.0f,  0f, 0 , 1,
-         0, 0.5f, -4,    1f, 0, 0, 1.0f,  0f, 1 , 1,
-                        
-         1, 0.5f, -3,     0f, 0, 1, 1.0f,  0f, 1, 0,
-         1, -0.5f, -3,    0f, 0f, 1, 1.0f,  0f, 1, 0,
-         0, -0.5f, -3,  0f, 0, 1, 1.0f,  0f, 1 , 0,
-         0, 0.5f,-3,     0f, 0, 1, 1.0f,  0f, 1, 0,
-          
-    
-      }, new short[]{
-        0, 1, 2, 3, 4, 5, 6, 5, 6, 7,
-        
-        
-    });
+    meshHelper.createMesh();
 	}
 	
 	@Override
@@ -56,18 +37,17 @@ public class MinGame implements ApplicationListener {
 		Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT
             | GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
-		
-//		camera.rotate(-0.1f);
 		camera.position.x = 10;
 		camera.position.y = 10;
 		camera.lookAt(0.0f, 0.0f, 0f);
 		camera.position.z = -50f;
 		camera.update();
-		meshHelper.drawMesh(perCamera);
+		meshHelper.drawMesh(camera);
 	}
 
 	@Override
 	public void resize(int width, int height) {
+	  camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override

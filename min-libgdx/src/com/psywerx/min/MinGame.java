@@ -12,8 +12,6 @@ public class MinGame implements ApplicationListener {
 	
 	@Override
 	public void create() {		
-		int w = Gdx.graphics.getWidth();
-		int h = Gdx.graphics.getHeight();
 		
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

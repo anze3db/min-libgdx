@@ -3,26 +3,22 @@ package com.psywerx.min;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 
 
 public class MinGame implements ApplicationListener {
-	private OrthographicCamera camera;
-  private MeshHelper meshHelper;
+	public static Camera camera;
+  private MeshHelper cube;
 	
 	@Override
 	public void create() {		
 		
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		meshHelper = new MeshHelper();
-    meshHelper.createMesh();
+	  camera = new Camera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cube = MeshHelper.createCubeMesh();
 	}
 	
 	@Override
 	public void dispose() {
-		meshHelper.dispose();
+		cube.dispose();
 	}
 
 	@Override
@@ -35,17 +31,14 @@ public class MinGame implements ApplicationListener {
 		Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT
             | GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
-		camera.position.x = 10;
-		camera.position.y = 10;
-		camera.lookAt(0.0f, 0.0f, 0f);
-		camera.position.z = -50f;
-		camera.update();
-		meshHelper.drawMesh(camera);
+		InputHandler.update();
+		camera.update(0);
+		cube.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-	  camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	  camera.resize(width, height);
 	}
 
 	@Override
@@ -55,4 +48,5 @@ public class MinGame implements ApplicationListener {
 	@Override
 	public void resume() {
 	}
+
 }

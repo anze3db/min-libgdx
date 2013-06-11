@@ -1,6 +1,5 @@
 package com.psywerx.min;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -42,10 +41,10 @@ public class MeshHelper {
       vertices[i++] = cubeNormals[nIdx++];
       vertices[i++] = cubeNormals[nIdx++];
       vertices[i++] = cubeNormals[nIdx++];
-      vertices[i++] = 1;
+      vertices[i++] = 0.3f;
+      vertices[i++] = 0.3f;
+      vertices[i++] = 0.3f;
       vertices[i++] = 0.0f;
-      vertices[i++] = 0.0f;
-      vertices[i++] = 1.0f;
     }
 
     short[] indices = {0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 15, 14, 12, 14, 13, 16, 17, 18, 16, 18, 19,
@@ -56,28 +55,26 @@ public class MeshHelper {
 
     return mesh;
   }
-  
-  
-  
-  public void createMesh(){
-    
-    mesh = genCube();
-    mesh.scale(50f, 50f, 50f);
-    modelView = new Matrix4().idt();
+
+  public static MeshHelper createCubeMesh() {
+    MeshHelper m = new MeshHelper();
+    m.mesh = genCube();
+    m.mesh.scale(50f, 50f, 50f);
+    m.modelView = new Matrix4().idt();
+    return m;
   }
   
-  
-  public void drawMesh(Camera camera){
+  public void draw(){
     if(mesh == null){
       throw new IllegalStateException("Draw mesh called before mash was initialized");
     }
     
 //    modelView.setToScaling(0.3f, 0.3f, 0.3f);
-    modelView.rotate(1, 1, 0, 0.5f);
+//    modelView.rotate(1, 1, 0, 0.5f);
     meshShader.begin();
-    meshShader.setUniformMatrix("u_worldView", camera.combined);
+    meshShader.setUniformMatrix("u_worldView", MinGame.camera.getCombined());
     meshShader.setUniformMatrix("u_modelView", modelView);
-    meshShader.setUniform3fv("u_lightPos", new float[]{0,0,-200f}, 0, 3);
+    meshShader.setUniform3fv("u_lightPos", new float[]{0,0,-150f}, 0, 3);
     mesh.render(meshShader, GL20.GL_TRIANGLES);
     meshShader.end();
   }

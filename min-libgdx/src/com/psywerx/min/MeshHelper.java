@@ -11,6 +11,7 @@ public class MeshHelper {
   private Mesh mesh;
   private ShaderProgram meshShader;
   private Matrix4 modelView;
+  private float[] lightPos = new float[3];
   
   public MeshHelper(){
     createShader();
@@ -41,9 +42,9 @@ public class MeshHelper {
       vertices[i++] = cubeNormals[nIdx++];
       vertices[i++] = cubeNormals[nIdx++];
       vertices[i++] = cubeNormals[nIdx++];
-      vertices[i++] = 0.3f;
-      vertices[i++] = 0.3f;
-      vertices[i++] = 0.3f;
+      vertices[i++] = 0.0f;
+      vertices[i++] = 0.0f;
+      vertices[i++] = 0.5f;
       vertices[i++] = 0.0f;
     }
 
@@ -71,10 +72,15 @@ public class MeshHelper {
     
 //    modelView.setToScaling(0.3f, 0.3f, 0.3f);
 //    modelView.rotate(1, 1, 0, 0.5f);
+    
+    lightPos[0] = MinGame.camera.getPosition().x;
+    lightPos[1] = MinGame.camera.getPosition().y;
+    lightPos[2] = MinGame.camera.getPosition().z;
+    
     meshShader.begin();
     meshShader.setUniformMatrix("u_worldView", MinGame.camera.getCombined());
     meshShader.setUniformMatrix("u_modelView", modelView);
-    meshShader.setUniform3fv("u_lightPos", new float[]{0,0,-150f}, 0, 3);
+    meshShader.setUniform3fv("u_lightPos", lightPos, 0, 3);
     mesh.render(meshShader, GL20.GL_TRIANGLES);
     meshShader.end();
   }
@@ -93,11 +99,10 @@ public class MeshHelper {
                         
                         + "void main()                   \n"
                         + "{                             \n"
-                        + "   vec3 modelViewVertex = vec3(u_modelView * a_position); \n"
-                        + "   vec3 modelViewNormal = vec3(u_modelView * vec4(a_normal, 0.0));"
-                        + "   vec3 lightVector = normalize(u_lightPos - modelViewVertex);"
-                        + "   float diffuse = max(dot(modelViewNormal, lightVector), 0.5);"
-                        + "   v_color = a_color * diffuse;         \n"
+                        + "   float ndotl = max(0.0, dot(a_normal, u_lightPos));"
+                        + "   v_color = vec4(0.0, 0.0, 0.0, 0.0);         \n"
+                        + "   v_color += a_color;"
+                        + "   v_color += ndotl * (0.008, 0.008, 0.008); "
                         + "   gl_Position = u_worldView * u_modelView * a_position;  \n"
                         + "}                             \n";
     // this one tells it what goes in between the points (i.e

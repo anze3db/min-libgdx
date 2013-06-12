@@ -18,8 +18,9 @@ public class Camera {
   public Camera(float width, float height){
     camera = new OrthographicCamera(width, height);
     camera.setToOrtho(true, width, height);
-    camera.position.set(0,0,-50);
+    camera.position.set(0,0,-500);
     camera.far = 1000;
+    camera.near = 0;
     
   }
 
@@ -46,7 +47,6 @@ public class Camera {
       t += theta;
       p += phi;
       
-      System.out.println(p);
       p = MathUtils.clamp(p, EPS, MathUtils.PI - EPS);
       if(Math.abs(t) < MathUtils.PI/2){
         t = Math.abs(t)/t * MathUtils.PI/2;

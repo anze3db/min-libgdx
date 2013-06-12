@@ -82,8 +82,6 @@ public class MeshHelper {
     meshShader.setUniformMatrix("u_worldView", MinGame.camera.getCombined());
     meshShader.setUniformMatrix("u_modelView", modelView);
     meshShader.setUniform3fv("u_lightPos", lightPos, 0, 3);
-    meshShader.setUniformf("u_time", totalTime);
-    
     mesh.render(meshShader, GL20.GL_TRIANGLES);
     meshShader.end();
   }
@@ -93,8 +91,7 @@ public class MeshHelper {
     String vertexShader = "uniform mat4 u_worldView;     \n"
                         + "uniform mat4 u_modelView;     \n"
                         + "uniform vec3 u_lightPos;      \n"
-                        + "uniform float u_time;         \n"
-        
+       
                         + "attribute vec4 a_position;    \n"
                         + "attribute vec4 a_color;       \n"
                         + "attribute vec3 a_normal;      \n"
@@ -104,23 +101,20 @@ public class MeshHelper {
                         + "void main()                   \n"
                         + "{                             \n"
                         + "   float ndotl = max(0.0, dot(a_normal, u_lightPos));"
-                        + "   v_color = vec4(0.0, 0.0, 0.0, 0.0);         \n"
-                        + "   v_color += a_color;"
-                        + "   v_color += ndotl * (0.008, 0.008, 0.008); "
-                        + "   gl_Position = u_worldView * u_modelView * (a_position + vec4(a_normal * (sin(u_time)+1)*10, 0.0));  \n"
+                        + "   v_color = a_color;        \n"
+                        + "   v_color += (ndotl * (0.008, 0.008, 0.008)); "
+                        + "   v_color.a = 1.0;"
+                        + "   gl_Position = u_worldView * u_modelView * a_position;  \n"
                         + "}                             \n";
     // this one tells it what goes in between the points (i.e
     // colour/texture)
     String fragmentShader = "#ifdef GL_ES                \n"
                           + "precision mediump float;    \n"
                           + "#endif                      \n"
-                          + "uniform float u_time;       \n"
                           + "varying vec4 v_color;       \n"
                           + "void main()                 \n"
                           + "{                           \n"
-                          + "  v_color.r = sin(u_time)+1; \n"
-                          + "  v_color.a = 1 - (sin(u_time)+1); \n"
-                          + "  gl_FragColor = v_color + (sin(u_time/10))/10;    \n"
+                          + "  gl_FragColor = v_color;    \n"
                           + "}";
 
     // make an actual shader from our strings
